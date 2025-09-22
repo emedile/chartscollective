@@ -1,38 +1,324 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Charts Collective</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #2a004f, #a67c00);
-      color: white;
-      text-align: center;
-      padding: 50px;
-    }
-    h1 { font-size: 3em; margin-bottom: 20px; }
-    p { font-size: 1.2em; margin-bottom: 40px; }
-    a.button {
-      display: inline-block;
-      padding: 15px 25px;
-      background: white;
-      color: #2a004f;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-    a.button:hover {
-      background: #ddd;
-    }
-  </style>
-</head>
-<body>
-  <h1>Welcome to Charts Collective</h1>
-  <p>Helping artists grow with strategy, content, and community.</p>
-  <a href="https://buy.stripe.com/test_123456789" class="button">Join Now</a>
-</body>
-</html>
+<!-- ===== ARTIST GROWTH SYSTEM — SINGLE-BLOCK SITE ===== -->
+<style>
+  :root{
+    --bg:#0f0b17;
+    --panel:#181224;
+    --panel-2:#1f1730;
+    --text:#f7f5ff;
+    --muted:#cfc6ff;
+    --brand:#7c3aed;        /* purple */
+    --brand-2:#d4af37;      /* gold */
+    --accent:#9a6cff;
+    --ok:#21d4a3;
+    --warn:#ffb84d;
+    --danger:#ff5d73;
+    --radius:14px;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body, .sqs-block-html .sqs-html-content{background:var(--bg); color:var(--text); font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial; line-height:1.6;}
+  a{color:var(--brand-2); text-decoration:none}
+  a:hover{opacity:.9}
+  .wrap{max-width:1100px; margin:0 auto; padding:28px}
+  /* Header */
+  .nav{position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(6px); background:linear-gradient( to bottom, rgba(15,11,23,.9), rgba(15,11,23,.55)); border-bottom:1px solid rgba(255,255,255,.06)}
+  .nav-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 28px}
+  .brand{display:flex; align-items:center; gap:12px}
+  .logo{width:38px; height:38px; border-radius:10px; background:conic-gradient(from 210deg, var(--brand), var(--brand-2), var(--brand), var(--brand)); box-shadow:0 0 0 3px rgba(255,255,255,.05)}
+  .brand h1{font-size:18px; margin:0; font-weight:700; letter-spacing:.4px}
+  .nav a.btn{padding:10px 14px; border-radius:10px; background:linear-gradient(135deg,var(--brand), var(--accent)); color:white; border:1px solid rgba(255,255,255,.12)}
+  .menu{display:flex; gap:18px; flex-wrap:wrap}
+  .menu a{color:var(--muted); font-weight:600; font-size:14px}
+  @media (max-width:800px){ .menu{display:none} }
+
+  /* Hero */
+  .hero{padding:80px 0 40px}
+  .badge{display:inline-flex; align-items:center; gap:10px; padding:6px 12px; border-radius:999px; background:rgba(124,58,237,.15); border:1px solid rgba(124,58,237,.35); color:#e9ddff; font-weight:700; letter-spacing:.3px}
+  .hero h2{font-size:44px; line-height:1.12; margin:16px 0 12px}
+  .hero p{font-size:18px; color:var(--muted); max-width:800px}
+  .cta-row{display:flex; gap:14px; flex-wrap:wrap; margin-top:18px}
+  .btn{display:inline-block; padding:14px 18px; border-radius:12px; border:1px solid rgba(255,255,255,.12); font-weight:700}
+  .btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent)); color:white}
+  .btn-ghost{background:rgba(255,255,255,.06); color:var(--text)}
+  .hero-card{margin-top:26px; padding:18px; border-radius:var(--radius); background:linear-gradient(180deg, rgba(124,58,237,.15), rgba(212,175,55,.10)); border:1px solid rgba(255,255,255,.08)}
+  .hero-grid{display:grid; grid-template-columns:1.3fr .7fr; gap:22px}
+  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr} }
+
+  /* Social proof */
+  .proof{display:flex; gap:16px; flex-wrap:wrap; margin-top:20px}
+  .pill{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); color:var(--muted); font-size:13px}
+
+  /* Sections */
+  section{padding:48px 0}
+  .section-title{font-size:28px; margin:0 0 8px}
+  .section-sub{color:var(--muted); margin:0 0 22px}
+
+  /* Offers */
+  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+  @media (max-width:1000px){ .cards{grid-template-columns:1fr} }
+  .card{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:22px; box-shadow:var(--shadow)}
+  .card.highlight{background:linear-gradient(180deg, var(--panel-2), var(--panel)); border-color:rgba(212,175,55,.4)}
+  .card h3{margin:0 0 8px}
+  .price{font-size:28px; font-weight:800}
+  .price small{font-size:13px; font-weight:600; color:var(--muted)}
+  .feat{margin:12px 0 0; display:grid; gap:10px}
+  .feat li{list-style:none; display:flex; gap:10px; align-items:flex-start}
+  .check{width:20px; height:20px; border-radius:6px; background:linear-gradient(135deg,var(--ok), #79efc9); display:inline-flex; align-items:center; justify-content:center; color:#0f2b23; font-weight:900; font-size:14px; flex:0 0 20px}
+  .divider{height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent); margin:16px 0}
+
+  /* FAQ */
+  .faq{display:grid; gap:12px}
+  .faq details{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px 16px}
+  .faq summary{cursor:pointer; font-weight:700}
+  .faq p{margin:10px 0 0; color:var(--muted)}
+
+  /* Contact */
+  .contact{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+  @media (max-width:900px){ .contact{grid-template-columns:1fr} }
+  .form{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:18px}
+  .form .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+  @media (max-width:700px){ .form .row{grid-template-columns:1fr} }
+  input, textarea, select{width:100%; padding:12px 14px; background:#110c1e; color:var(--text); border:1px solid rgba(255,255,255,.12); border-radius:12px}
+  label{font-size:13px; color:var(--muted)}
+  .note{font-size:12px; color:var(--muted)}
+
+  /* Sticky footer bar */
+  .bar{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); width:min(1000px,92%); display:flex; gap:12px; align-items:center; justify-content:space-between; background:linear-gradient(90deg, rgba(124,58,237,.25), rgba(212,175,55,.20)); border:1px solid rgba(255,255,255,.14); border-radius:14px; padding:10px 14px; box-shadow:var(--shadow)}
+  .bar small{color:#eee}
+  @media (max-width:700px){ .bar span{display:none} }
+
+  /* Helper */
+  .tag{display:inline-flex; padding:4px 8px; border-radius:999px; background:rgba(212,175,55,.15); border:1px solid rgba(212,175,55,.35); color:#ffe9a8; font-size:12px; font-weight:800; letter-spacing:.3px}
+</style>
+
+<header class="nav">
+  <div class="nav-inner wrap">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <h1>Artist Growth System</h1>
+    </div>
+    <nav class="menu" aria-label="Primary">
+      <a href="#offers">Offers</a>
+      <a href="#proof">Proof</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#book" class="btn">Book a Call</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <span class="badge">🎵 From Unknown → Unignorable</span>
+    <div class="hero-grid">
+      <div>
+        <h2>Turn your songs into fans with a plug-and-play short-form system.</h2>
+        <p>Hey, I’m <strong>Deme</strong>. I help new & underground artists grow faster using a simple, repeatable content engine: daily ideas, viral-ready edits, and a posting plan that compounds. Start DIY for $100–$200, go Done-For-You for $500, or get the full Bootcamp for $2,000.</p>
+        <div class="cta-row">
+          <a href="#offers" class="btn btn-primary">See Packages</a>
+          <a href="#contact" class="btn btn-ghost">Ask a Question</a>
+        </div>
+        <div class="proof" id="proof">
+          <div class="pill">⚡ Daily trend calendar</div>
+          <div class="pill">🎬 12 edits / month</div>
+          <div class="pill">📈 Ads & growth coaching</div>
+          <div class="pill">🧩 Templates you can reuse</div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="tag">QUICK WINS</div>
+        <h3 style="margin:8px 0 6px">Your first 30 days</h3>
+        <ul class="feat">
+          <li><span class="check">✓</span><div>Install your weekly posting schedule (no guesswork)</div></li>
+          <li><span class="check">✓</span><div>12 lyric-style clips ready to post (DFY plan)</div></li>
+          <li><span class="check">✓</span><div>Hook library + caption formulas that convert</div></li>
+          <li><span class="check">✓</span><div>Optional ad boost: turn a good post into a great result</div></li>
+        </ul>
+        <div class="divider"></div>
+        <small class="note">You can start DIY (ideas/accountability), or skip straight to Done-For-You. When you’re ready, the Bootcamp installs the full system end-to-end.</small>
+      </div>
+    </div>
+  </section>
+
+  <section id="offers" class="wrap">
+    <h3 class="section-title">Packages that match your stage</h3>
+    <p class="section-sub">Choose DIY guidance, Done-For-You, or the full system. Upgrade anytime.</p>
+
+    <div class="cards">
+      <!-- STARTER -->
+      <article class="card">
+        <div class="tag">DIY / ENTRY</div>
+        <h3>Starter: Ideas & Accountability</h3>
+        <div class="price">$100<span>/mo</span> <small>or $200/mo (Templates+)</small></div>
+        <ul class="feat">
+          <li><span class="check">✓</span><div><strong>Daily post ideas</strong> tailored to your sound</div></li>
+          <li><span class="check">✓</span><div><strong>Weekly check-in</strong> & simple tweaks</div></li>
+          <li><span class="check">✓</span><div><strong>Trending sounds</strong> & caption starters</div></li>
+          <li><span class="check">✓</span><div><em>+$100 upgrade</em>: 4–6 reusable edit templates/month</div></li>
+        </ul>
+        <div class="divider"></div>
+        <a href="#book" class="btn btn-primary">Start at $100</a>
+      </article>
+
+      <!-- GROWTH -->
+      <article class="card highlight">
+        <div class="tag">MOST POPULAR</div>
+        <h3>Growth: Done-For-You Content</h3>
+        <div class="price">$500<span>/mo</span> <small>12 edits + daily ideas</small></div>
+        <ul class="feat">
+          <li><span class="check">✓</span><div><strong>12 lyric-style edits</strong> (30s) every month</div></li>
+          <li><span class="check">✓</span><div><strong>Daily trend prompts</strong> so you always know what to post</div></li>
+          <li><span class="check">✓</span><div>Light coaching on hooks, framing, and thumbnails</div></li>
+          <li><span class="check">✓</span><div>Simple asset drop → we handle the rest</div></li>
+        </ul>
+        <div class="divider"></div>
+        <a href="#book" class="btn btn-primary">Apply for $500/mo</a>
+        <small class="note">Limited spots (we keep quality high).</small>
+      </article>
+
+      <!-- BOOTCAMP -->
+      <article class="card">
+        <div class="tag">INTENSIVE</div>
+        <h3>Bootcamp: Full System Install</h3>
+        <div class="price">$2,000 <small>or 2 × $1,000</small></div>
+        <ul class="feat">
+          <li><span class="check">✓</span><div>End-to-end playbook: editing, posting, analytics, ads</div></li>
+          <li><span class="check">✓</span><div>Custom brand/story angle + content calendar</div></li>
+          <li><span class="check">✓</span><div>Hands-on sessions + asset templates</div></li>
+          <li><span class="check">✓</span><div><strong>Graduate into DFY</strong> when you want it off your plate</div></li>
+        </ul>
+        <div class="divider"></div>
+        <a href="#book" class="btn btn-primary">Join the Bootcamp</a>
+        <small class="note">Payment plan available on the call.</small>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <h3 class="section-title">What you’ll get every month</h3>
+    <p class="section-sub">Consistency + trend alignment + better hooks. That’s how unknown artists break through.</p>
+    <div class="cards" style="grid-template-columns:repeat(4,1fr)">
+      <div class="card"><h3>Daily Ideas</h3><p>Zero guesswork: prompts tailored to your niche, sound, and release plan.</p></div>
+      <div class="card"><h3>12 Edits</h3><p>Short, sticky clips that highlight your best 15–30 seconds. You record, we polish.</p></div>
+      <div class="card"><h3>Hook Lab</h3><p>Title & opening-second formulas that stop the scroll and earn watch time.</p></div>
+      <div class="card"><h3>Light Ads</h3><p>Optionally boost winners so more real fans see you (no botted fluff).</p></div>
+    </div>
+  </section>
+
+  <section id="faq" class="wrap">
+    <h3 class="section-title">FAQ</h3>
+    <div class="faq">
+      <details>
+        <summary>Is $2,000 upfront the only way into the Bootcamp?</summary>
+        <p>No—there’s a simple plan: <strong>2 × $1,000</strong> in 30 days. Same program, just split payments.</p>
+      </details>
+      <details>
+        <summary>What does the $500 plan include exactly?</summary>
+        <p><strong>12 lyric-style edits/month</strong> (30s each) + <strong>daily trend ideas</strong> and light posting guidance. You’ll always know what to post—and you’ll have content ready.</p>
+      </details>
+      <details>
+        <summary>Can I start smaller at $100–$200?</summary>
+        <p>Yep. Get daily ideas + weekly accountability at $100. Add 4–6 reusable templates each month for $200 total.</p>
+      </details>
+      <details>
+        <summary>Who’s behind this?</summary>
+        <p>I’m <strong>Deme</strong>—artist and growth coach. I build simple content systems for underground artists who want consistent fans, not fluff.</p>
+      </details>
+      <details>
+        <summary>How fast will I see results?</summary>
+        <p>Most artists feel momentum in the first 2–4 weeks from consistency and stronger hooks. Virality varies—but your surface area for wins goes way up.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="contact" class="wrap">
+    <h3 class="section-title">Book a Call / Ask a Question</h3>
+    <p class="section-sub">Prefer DMs? Message me on IG/TikTok (@yourhandle). Otherwise, use the form below.</p>
+    <div class="contact" id="book">
+      <form class="form" method="post" action="mailto:youremail@example.com" enctype="text/plain" onsubmit="return submitMsg(this)">
+        <div class="row">
+          <div>
+            <label for="name">Name</label>
+            <input id="name" name="Name" required placeholder="Your name">
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input id="email" name="Email" type="email" required placeholder="you@example.com">
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="ig">Instagram / TikTok</label>
+            <input id="ig" name="Social" placeholder="@yourhandle">
+          </div>
+          <div>
+            <label for="plan">Interested in</label>
+            <select id="plan" name="Plan">
+              <option>Starter ($100/mo)</option>
+              <option>Starter + Templates ($200/mo)</option>
+              <option>Growth DFY ($500/mo)</option>
+              <option>Bootcamp ($2,000 or 2 × $1,000)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label for="msg">What are you trying to achieve in 90 days?</label>
+          <textarea id="msg" name="Message" rows="5" placeholder="Be specific: releases, platforms, current results, obstacles…"></textarea>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center; margin-top:12px">
+          <button class="btn btn-primary" type="submit">Send</button>
+          <a class="btn btn-ghost" href="/book-call">Or pick a time</a>
+          <small class="note">Tip: replace <em>mailto:</em> with a Squarespace Form Block or your scheduler URL.</small>
+        </div>
+      </form>
+
+      <div class="card">
+        <div class="tag">HOW IT WORKS</div>
+        <h3 style="margin:10px 0 6px">Simple next steps</h3>
+        <ul class="feat">
+          <li><span class="check">✓</span><div>Quick call → goals, current content, bottlenecks</div></li>
+          <li><span class="check">✓</span><div>Pick a plan → DIY, DFY, or Bootcamp</div></li>
+          <li><span class="check">✓</span><div>We install your weekly posting system</div></li>
+          <li><span class="check">✓</span><div>Measure, iterate, and stack wins</div></li>
+        </ul>
+        <div class="divider"></div>
+        <p class="note">Need custom? Ask about <strong>bulk edits</strong> (16–20/mo) or <strong>concept videos</strong>.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap" style="padding-bottom:120px">
+  <div class="divider"></div>
+  <p style="color:var(--muted)">© <span id="y"></span> Deme • Artist Growth System • All Rights Reserved</p>
+</footer>
+
+<!-- Sticky action bar -->
+<div class="bar">
+  <small>Ready to grow faster? <span>DIY from $100 • DFY $500 • Bootcamp $2,000</span></small>
+  <div>
+    <a href="#offers" class="btn btn-ghost">View Plans</a>
+    <a href="#book" class="btn btn-primary">Book a Call</a>
+  </div>
+</div>
+
+<script>
+  // dynamic year
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // basic mailto confirmation
+  function submitMsg(form){
+    alert("Thanks! If your email client doesn't open, DM me on IG/TikTok (@yourhandle) or use /book-call.");
+    return true;
+  }
+
+  // Smooth scroll for in-page links (Squarespace sometimes disables default behavior)
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}) }
+    });
+  });
+</script>
+<!-- ===== END SINGLE-BLOCK SITE ===== -->
