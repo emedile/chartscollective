@@ -1,109 +1,141 @@
-<!-- ===== ARTIST GROWTH SYSTEM — SINGLE-BLOCK SITE ===== -->
-<style>
-  :root{
-    --bg:#0f0b17;
-    --panel:#181224;
-    --panel-2:#1f1730;
-    --text:#f7f5ff;
-    --muted:#cfc6ff;
-    --brand:#7c3aed;        /* purple */
-    --brand-2:#d4af37;      /* gold */
-    --accent:#9a6cff;
-    --ok:#21d4a3;
-    --warn:#ffb84d;
-    --danger:#ff5d73;
-    --radius:14px;
-    --shadow:0 10px 30px rgba(0,0,0,.35);
-  }
-  *{box-sizing:border-box}
-  body, .sqs-block-html .sqs-html-content{background:var(--bg); color:var(--text); font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial; line-height:1.6;}
-  a{color:var(--brand-2); text-decoration:none}
-  a:hover{opacity:.9}
-  .wrap{max-width:1100px; margin:0 auto; padding:28px}
-  /* Header */
-  .nav{position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(6px); background:linear-gradient( to bottom, rgba(15,11,23,.9), rgba(15,11,23,.55)); border-bottom:1px solid rgba(255,255,255,.06)}
-  .nav-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 28px}
-  .brand{display:flex; align-items:center; gap:12px}
-  .logo{width:38px; height:38px; border-radius:10px; background:conic-gradient(from 210deg, var(--brand), var(--brand-2), var(--brand), var(--brand)); box-shadow:0 0 0 3px rgba(255,255,255,.05)}
-  .brand h1{font-size:18px; margin:0; font-weight:700; letter-spacing:.4px}
-  .nav a.btn{padding:10px 14px; border-radius:10px; background:linear-gradient(135deg,var(--brand), var(--accent)); color:white; border:1px solid rgba(255,255,255,.12)}
-  .menu{display:flex; gap:18px; flex-wrap:wrap}
-  .menu a{color:var(--muted); font-weight:600; font-size:14px}
-  @media (max-width:800px){ .menu{display:none} }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Charts Collective</title>
+  <meta name="color-scheme" content="dark light">
+  <style>
+    :root{
+      --bg:#0f0b17;
+      --panel:#181224;
+      --panel-2:#1f1730;
+      --text:#f7f5ff;
+      --muted:#cfc6ff;
+      --brand:#7c3aed;         /* purple */
+      --brand-2:#d4af37;       /* gold */
+      --accent:#9a6cff;
+      --ok:#21d4a3;
+      --warn:#ffb84d;
+      --danger:#ff5d73;
+      --radius:14px;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --max:1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{background:var(--bg); color:var(--text); font-family:ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial; line-height:1.6}
+    a{color:var(--brand-2); text-decoration:none}
+    a:hover{opacity:.9}
+    .wrap{max-width:var(--max); margin:0 auto; padding:clamp(16px,2.8vw,28px)}
+    /* Header */
+    .nav{position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(6px); background:linear-gradient(to bottom, rgba(15,11,23,.9), rgba(15,11,23,.55)); border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav-inner{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px clamp(12px,2.6vw,28px)}
+    .brand{display:flex; align-items:center; gap:10px; min-height:44px}
+    .logo{width:34px; height:34px; border-radius:10px; background:conic-gradient(from 210deg, var(--brand), var(--brand-2), var(--brand), var(--brand))}
+    .brand h1{font-size:clamp(16px,1.6vw,18px); margin:0; font-weight:700; letter-spacing:.3px}
+    .menu{display:flex; gap:18px; align-items:center}
+    .menu a{color:var(--muted); font-weight:600; font-size:14px; line-height:1; padding:10px 6px}
+    .btn{display:inline-block; padding:14px 18px; border-radius:12px; border:1px solid rgba(255,255,255,.12); font-weight:700; min-height:44px}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent)); color:white}
+    .btn-ghost{background:rgba(255,255,255,.06); color:var(--text)}
+    .nav .cta{padding:10px 14px; border-radius:10px; background:linear-gradient(135deg,var(--brand), var(--accent)); color:white; border:1px solid rgba(255,255,255,.12)}
+    /* Mobile menu */
+    .hamburger{display:none; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.06); border-radius:12px; padding:10px 12px; color:var(--text)}
+    @media (max-width:860px){
+      .menu{display:none}
+      .hamburger{display:inline-flex; align-items:center; gap:8px}
+      .menu.open{display:flex; position:fixed; inset:58px 12px auto 12px; background:var(--panel); border:1px solid rgba(255,255,255,.1); border-radius:14px; padding:12px; flex-direction:column; gap:8px; z-index:60}
+      .menu.open a{width:100%; padding:12px; border-radius:10px; background:rgba(255,255,255,.04)}
+      .nav .cta{display:none}
+    }
 
-  /* Hero */
-  .hero{padding:80px 0 40px}
-  .badge{display:inline-flex; align-items:center; gap:10px; padding:6px 12px; border-radius:999px; background:rgba(124,58,237,.15); border:1px solid rgba(124,58,237,.35); color:#e9ddff; font-weight:700; letter-spacing:.3px}
-  .hero h2{font-size:44px; line-height:1.12; margin:16px 0 12px}
-  .hero p{font-size:18px; color:var(--muted); max-width:800px}
-  .cta-row{display:flex; gap:14px; flex-wrap:wrap; margin-top:18px}
-  .btn{display:inline-block; padding:14px 18px; border-radius:12px; border:1px solid rgba(255,255,255,.12); font-weight:700}
-  .btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent)); color:white}
-  .btn-ghost{background:rgba(255,255,255,.06); color:var(--text)}
-  .hero-card{margin-top:26px; padding:18px; border-radius:var(--radius); background:linear-gradient(180deg, rgba(124,58,237,.15), rgba(212,175,55,.10)); border:1px solid rgba(255,255,255,.08)}
-  .hero-grid{display:grid; grid-template-columns:1.3fr .7fr; gap:22px}
-  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr} }
+    /* Hero */
+    .hero{padding:clamp(40px,8vw,80px) 0 32px}
+    .badge{display:inline-flex; align-items:center; gap:10px; padding:6px 12px; border-radius:999px; background:rgba(124,58,237,.15); border:1px solid rgba(124,58,237,.35); color:#e9ddff; font-weight:700; letter-spacing:.3px; font-size:12px}
+    .hero h2{font-size:clamp(28px,5vw,44px); line-height:1.15; margin:16px 0 10px}
+    .hero p{font-size:clamp(15px,2vw,18px); color:var(--muted); max-width:800px}
+    .cta-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
+    .hero-card{margin-top:22px; padding:16px; border-radius:var(--radius); background:linear-gradient(180deg, rgba(124,58,237,.15), rgba(212,175,55,.10)); border:1px solid rgba(255,255,255,.08)}
+    .hero-grid{display:grid; grid-template-columns:1.3fr .7fr; gap:22px}
+    @media (max-width:900px){ .hero-grid{grid-template-columns:1fr} }
 
-  /* Social proof */
-  .proof{display:flex; gap:16px; flex-wrap:wrap; margin-top:20px}
-  .pill{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); color:var(--muted); font-size:13px}
+    /* Social proof */
+    .proof{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px}
+    .pill{padding:8px 10px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); color:var(--muted); font-size:12px}
 
-  /* Sections */
-  section{padding:48px 0}
-  .section-title{font-size:28px; margin:0 0 8px}
-  .section-sub{color:var(--muted); margin:0 0 22px}
+    /* Sections */
+    section{padding:40px 0}
+    .section-title{font-size:clamp(22px,2.6vw,28px); margin:0 0 8px}
+    .section-sub{color:var(--muted); margin:0 0 18px; font-size:clamp(14px,1.8vw,16px)}
 
-  /* Offers */
-  .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
-  @media (max-width:1000px){ .cards{grid-template-columns:1fr} }
-  .card{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:22px; box-shadow:var(--shadow)}
-  .card.highlight{background:linear-gradient(180deg, var(--panel-2), var(--panel)); border-color:rgba(212,175,55,.4)}
-  .card h3{margin:0 0 8px}
-  .price{font-size:28px; font-weight:800}
-  .price small{font-size:13px; font-weight:600; color:var(--muted)}
-  .feat{margin:12px 0 0; display:grid; gap:10px}
-  .feat li{list-style:none; display:flex; gap:10px; align-items:flex-start}
-  .check{width:20px; height:20px; border-radius:6px; background:linear-gradient(135deg,var(--ok), #79efc9); display:inline-flex; align-items:center; justify-content:center; color:#0f2b23; font-weight:900; font-size:14px; flex:0 0 20px}
-  .divider{height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent); margin:16px 0}
+    /* Offers */
+    .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+    @media (max-width:1040px){ .cards{grid-template-columns:1fr} }
+    .card{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:clamp(16px,2.4vw,22px); box-shadow:var(--shadow)}
+    .card.highlight{background:linear-gradient(180deg, var(--panel-2), var(--panel)); border-color:rgba(212,175,55,.4)}
+    .card h3{margin:0 0 6px; font-size:clamp(18px,2.2vw,22px)}
+    .price{font-size:clamp(22px,2.6vw,28px); font-weight:800}
+    .price small{font-size:12px; font-weight:600; color:var(--muted)}
+    .feat{margin:10px 0 0; display:grid; gap:8px}
+    .feat li{list-style:none; display:flex; gap:10px; align-items:flex-start}
+    .check{width:20px; height:20px; border-radius:6px; background:linear-gradient(135deg,var(--ok), #79efc9); display:inline-flex; align-items:center; justify-content:center; color:#0f2b23; font-weight:900; font-size:14px; flex:0 0 20px}
+    .divider{height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent); margin:14px 0}
 
-  /* FAQ */
-  .faq{display:grid; gap:12px}
-  .faq details{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px 16px}
-  .faq summary{cursor:pointer; font-weight:700}
-  .faq p{margin:10px 0 0; color:var(--muted)}
+    /* Feature grid (4-up) */
+    .four-up{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+    @media (max-width:900px){ .four-up{grid-template-columns:1fr 1fr} }
+    @media (max-width:520px){ .four-up{grid-template-columns:1fr} }
 
-  /* Contact */
-  .contact{display:grid; grid-template-columns:1fr 1fr; gap:18px}
-  @media (max-width:900px){ .contact{grid-template-columns:1fr} }
-  .form{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:18px}
-  .form .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-  @media (max-width:700px){ .form .row{grid-template-columns:1fr} }
-  input, textarea, select{width:100%; padding:12px 14px; background:#110c1e; color:var(--text); border:1px solid rgba(255,255,255,.12); border-radius:12px}
-  label{font-size:13px; color:var(--muted)}
-  .note{font-size:12px; color:var(--muted)}
+    /* FAQ */
+    .faq{display:grid; gap:12px}
+    .faq details{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:12px 14px}
+    .faq summary{cursor:pointer; font-weight:700; font-size:clamp(14px,1.8vw,16px)}
+    .faq p{margin:10px 0 0; color:var(--muted); font-size:clamp(13px,1.7vw,15px)}
 
-  /* Sticky footer bar */
-  .bar{position:fixed; bottom:18px; left:50%; transform:translateX(-50%); width:min(1000px,92%); display:flex; gap:12px; align-items:center; justify-content:space-between; background:linear-gradient(90deg, rgba(124,58,237,.25), rgba(212,175,55,.20)); border:1px solid rgba(255,255,255,.14); border-radius:14px; padding:10px 14px; box-shadow:var(--shadow)}
-  .bar small{color:#eee}
-  @media (max-width:700px){ .bar span{display:none} }
+    /* Contact */
+    .contact{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    @media (max-width:900px){ .contact{grid-template-columns:1fr} }
+    .form{background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:16px}
+    .form .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    @media (max-width:700px){ .form .row{grid-template-columns:1fr} }
+    input, textarea, select{width:100%; padding:14px 14px; background:#110c1e; color:var(--text); border:1px solid rgba(255,255,255,.12); border-radius:12px; font-size:16px}
+    label{font-size:13px; color:var(--muted)}
+    .note{font-size:12px; color:var(--muted)}
 
-  /* Helper */
-  .tag{display:inline-flex; padding:4px 8px; border-radius:999px; background:rgba(212,175,55,.15); border:1px solid rgba(212,175,55,.35); color:#ffe9a8; font-size:12px; font-weight:800; letter-spacing:.3px}
-</style>
+    /* Sticky footer bar */
+    .bar{position:fixed; bottom:16px; left:50%; transform:translateX(-50%); width:min(var(--max),92%); display:flex; gap:10px; align-items:center; justify-content:space-between; background:linear-gradient(90deg, rgba(124,58,237,.25), rgba(212,175,55,.20)); border:1px solid rgba(255,255,255,.14); border-radius:14px; padding:10px 12px; box-shadow:var(--shadow)}
+    .bar small{color:#eee; font-size:12px}
+    @media (max-width:520px){
+      .bar{padding:8px 10px}
+      .bar small span{display:none}
+      .bar .btn{padding:10px 12px}
+    }
 
+    /* Helper */
+    .tag{display:inline-flex; padding:4px 8px; border-radius:999px; background:rgba(212,175,55,.15); border:1px solid rgba(212,175,55,.35); color:#ffe9a8; font-size:12px; font-weight:800; letter-spacing:.3px}
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{scroll-behavior:auto}
+    }
+  </style>
+</head>
+<body>
 <header class="nav">
   <div class="nav-inner wrap">
     <div class="brand">
+      <button class="hamburger" aria-label="Open menu" id="menuBtn">☰ Menu</button>
       <div class="logo" aria-hidden="true"></div>
       <h1>Charts Collective</h1>
     </div>
-    <nav class="menu" aria-label="Primary">
+    <nav class="menu" aria-label="Primary" id="menu">
       <a href="#offers">Offers</a>
       <a href="#proof">Proof</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a href="#book" class="btn">Book a Call</a>
+    <a href="#book" class="cta">Book a Call</a>
   </div>
 </header>
 
@@ -118,14 +150,14 @@
           <a href="#offers" class="btn btn-primary">See Packages</a>
           <a href="#contact" class="btn btn-ghost">Ask a Question</a>
         </div>
-        <div class="proof" id="proof">
+        <div class="proof" id="proof" aria-label="Highlights">
           <div class="pill">⚡ Daily trend calendar</div>
           <div class="pill">🎬 12 edits / month</div>
           <div class="pill">📈 Ads & growth coaching</div>
-          <div class="pill">🧩 Templates you can reuse</div>
+          <div class="pill">🧩 Reusable templates</div>
         </div>
       </div>
-      <div class="hero-card">
+      <div class="hero-card" aria-label="Quick wins">
         <div class="tag">QUICK WINS</div>
         <h3 style="margin:8px 0 6px">Your first 30 days</h3>
         <ul class="feat">
@@ -135,7 +167,7 @@
           <li><span class="check">✓</span><div>Optional ad boost: turn a good post into a great result</div></li>
         </ul>
         <div class="divider"></div>
-        <small class="note">You can start DIY (ideas/accountability), or skip straight to Done-For-You. When you’re ready, the Bootcamp installs the full system end-to-end.</small>
+        <small class="note">Start DIY (ideas/accountability), or skip straight to Done-For-You. The Bootcamp installs the full system end-to-end.</small>
       </div>
     </div>
   </section>
@@ -145,7 +177,6 @@
     <p class="section-sub">Choose DIY guidance, Done-For-You, or the full system. Upgrade anytime.</p>
 
     <div class="cards">
-      <!-- STARTER -->
       <article class="card">
         <div class="tag">DIY / ENTRY</div>
         <h3>Starter: Ideas & Accountability</h3>
@@ -160,7 +191,6 @@
         <a href="#book" class="btn btn-primary">Start at $100</a>
       </article>
 
-      <!-- GROWTH -->
       <article class="card highlight">
         <div class="tag">MOST POPULAR</div>
         <h3>Growth: Done-For-You Content</h3>
@@ -176,7 +206,6 @@
         <small class="note">Limited spots (we keep quality high).</small>
       </article>
 
-      <!-- BOOTCAMP -->
       <article class="card">
         <div class="tag">INTENSIVE</div>
         <h3>Bootcamp: Full System Install</h3>
@@ -197,7 +226,7 @@
   <section class="wrap">
     <h3 class="section-title">What you’ll get every month</h3>
     <p class="section-sub">Consistency + trend alignment + better hooks. That’s how unknown artists break through.</p>
-    <div class="cards" style="grid-template-columns:repeat(4,1fr)">
+    <div class="four-up">
       <div class="card"><h3>Daily Ideas</h3><p>Zero guesswork: prompts tailored to your niche, sound, and release plan.</p></div>
       <div class="card"><h3>12 Edits</h3><p>Short, sticky clips that highlight your best 15–30 seconds. You record, we polish.</p></div>
       <div class="card"><h3>Hook Lab</h3><p>Title & opening-second formulas that stop the scroll and earn watch time.</p></div>
@@ -233,23 +262,23 @@
 
   <section id="contact" class="wrap">
     <h3 class="section-title">Book a Call / Ask a Question</h3>
-    <p class="section-sub">Prefer DMs? Message me on IG/TikTok (@yourhandle). Otherwise, use the form below.</p>
+    <p class="section-sub">Prefer DMs? Message me on IG/TikTok (<strong>@yourhandle</strong>). Otherwise, use the form below.</p>
     <div class="contact" id="book">
       <form class="form" method="post" action="mailto:youremail@example.com" enctype="text/plain" onsubmit="return submitMsg(this)">
         <div class="row">
           <div>
             <label for="name">Name</label>
-            <input id="name" name="Name" required placeholder="Your name">
+            <input id="name" name="Name" required placeholder="Your name" autocomplete="name">
           </div>
           <div>
             <label for="email">Email</label>
-            <input id="email" name="Email" type="email" required placeholder="you@example.com">
+            <input id="email" name="Email" type="email" required placeholder="you@example.com" autocomplete="email">
           </div>
         </div>
         <div class="row">
           <div>
             <label for="ig">Instagram / TikTok</label>
-            <input id="ig" name="Social" placeholder="@yourhandle">
+            <input id="ig" name="Social" placeholder="@yourhandle" autocomplete="off">
           </div>
           <div>
             <label for="plan">Interested in</label>
@@ -265,14 +294,14 @@
           <label for="msg">What are you trying to achieve in 90 days?</label>
           <textarea id="msg" name="Message" rows="5" placeholder="Be specific: releases, platforms, current results, obstacles…"></textarea>
         </div>
-        <div style="display:flex; gap:10px; align-items:center; margin-top:12px">
+        <div style="display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap">
           <button class="btn btn-primary" type="submit">Send</button>
           <a class="btn btn-ghost" href="/book-call">Or pick a time</a>
-          <small class="note">Tip: replace <em>mailto:</em> with a Squarespace Form Block or your scheduler URL.</small>
+          <small class="note">Tip: replace <em>mailto:</em> with a Stripe payment link or your scheduler URL.</small>
         </div>
       </form>
 
-      <div class="card">
+      <div class="card" aria-label="How it works">
         <div class="tag">HOW IT WORKS</div>
         <h3 style="margin:10px 0 6px">Simple next steps</h3>
         <ul class="feat">
@@ -290,7 +319,7 @@
 
 <footer class="wrap" style="padding-bottom:120px">
   <div class="divider"></div>
-  <p style="color:var(--muted)">© <span id="y"></span> Deme • Artist Growth System • All Rights Reserved</p>
+  <p style="color:var(--muted)">© <span id="y"></span> Deme • Charts Collective • All Rights Reserved</p>
 </footer>
 
 <!-- Sticky action bar -->
@@ -307,18 +336,28 @@
   document.getElementById('y').textContent = new Date().getFullYear();
 
   // basic mailto confirmation
-  function submitMsg(form){
-    alert("Thanks! If your email client doesn't open, DM me on IG/TikTok (@yourhandle) or use /book-call.");
+  function submitMsg(){
+    alert("Thanks! If your email client doesn't open, DM me @yourhandle or use /book-call.");
     return true;
   }
 
-  // Smooth scroll for in-page links (Squarespace sometimes disables default behavior)
+  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
     a.addEventListener('click', e=>{
       const id = a.getAttribute('href').slice(1);
       const el = document.getElementById(id);
-      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}) }
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+      // close mobile menu after click
+      menu.classList.remove('open');
     });
   });
+
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const menu = document.getElementById('menu');
+  if(menuBtn){
+    menuBtn.addEventListener('click', ()=> menu.classList.toggle('open'));
+  }
 </script>
-<!-- ===== END SINGLE-BLOCK SITE ===== -->
+</body>
+</html>
