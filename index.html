@@ -1,360 +1,384 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Calendar, Bell, BarChart3, Music2, Flame, UploadCloud, Shield, Zap, Check, PlayCircle, MessageSquare, Wand2 } from "lucide-react";
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ViralLab — AI Label Marketing Team for Artists</title>
+  <meta name="description" content="Trend-aware posting schedules, auto-publish, and performance intelligence for indie artists." />
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand1: '#ef4444', brand2: '#f59e0b', brand3: '#a855f7' }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* subtle gradient halo background */
+    .bg-halo:before, .bg-halo:after{
+      content:""; position:fixed; inset:auto; pointer-events:none; z-index:-1; filter:blur(90px);
+    }
+    .bg-halo:before{ top:-120px; left:50%; width:900px; height:900px; transform:translateX(-50%);
+      background: radial-gradient(40% 40% at 50% 50%, rgba(239,68,68,.35), rgba(245,158,11,.2) 45%, rgba(168,85,247,.12) 70%, transparent 80%); }
+    .bg-halo:after{ right:-200px; bottom:-200px; width:700px; height:700px;
+      background: radial-gradient(40% 40% at 50% 50%, rgba(239,68,68,.25), rgba(168,85,247,.15) 45%, rgba(6,182,212,.12) 70%, transparent 80%); }
+    /* simple accordion caret */
+    details summary::-webkit-details-marker { display:none; }
+    details[open] .caret { transform:rotate(45deg); }
+  </style>
+</head>
+<body class="bg-black text-white selection:bg-brand1/60 selection:text-white bg-halo">
 
-// Tailwind-based single-file landing page inspired by tryholo.ai aesthetic
-// Uses shadcn/ui design language and modern gradients. Drop into a Next.js app or any React build.
-
-export default function Landing() {
-  return (
-    <div className="min-h-screen bg-black text-white selection:bg-red-500/60 selection:text-white">
-      <GradientBG />
-      <Header />
-      <main className="relative z-10">
-        <Hero />
-        <SocialProof />
-        <FeatureGrid />
-        <HowItWorks />
-        <DemoBanner />
-        <Pricing />
-        <FAQ />
-        <CTA />
-      </main>
-      <Footer />
-    </div>
-  );
-}
-
-function GradientBG() {
-  return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
-      <div className="absolute -top-48 left-1/2 h-[60rem] w-[60rem] -translate-x-1/2 rounded-full bg-gradient-to-br from-red-600/30 via-purple-600/20 to-amber-400/10 blur-3xl"/>
-      <div className="absolute bottom-0 right-0 h-[40rem] w-[40rem] bg-gradient-to-tr from-red-500/20 via-fuchsia-500/10 to-cyan-400/10 blur-3xl"/>
-    </div>
-  );
-}
-
-function Header() {
-  return (
-    <header className="sticky top-0 z-20 backdrop-blur supports-[backdrop-filter]:bg-black/40 bg-black/30 border-b border-white/5">
-      <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 grid place-items-center rounded-xl bg-gradient-to-br from-red-500 to-amber-400">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <span className="font-semibold tracking-tight">ViralLab</span>
-          <span className="ml-2 rounded-full bg-white/5 px-2.5 py-1 text-xs text-white/70">for Artists</span>
+  <!-- Header -->
+  <header class="sticky top-0 z-20 backdrop-blur bg-black/40 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 grid place-items-center rounded-xl bg-gradient-to-br from-brand1 to-brand2">
+          <!-- sparkles icon -->
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3l1.5 3.5L17 8l-3.5 1.5L12 13l-1.5-3.5L7 8l3.5-1.5L12 3zM19 16l.8 1.8L22 18l-1.8.8L19 21l-.8-2.2L16 18l2.2-.2L19 16zM4 15l.7 1.6L6 17l-1.3.4L4 19l-.4-1.6L2 17l1.6-.4L4 15z"/>
+          </svg>
         </div>
-        <nav className="hidden md:flex items-center gap-8 text-sm text-white/80">
-          <a href="#features" className="hover:text-white">Features</a>
-          <a href="#how" className="hover:text-white">How it works</a>
-          <a href="#pricing" className="hover:text-white">Pricing</a>
-          <a href="#faq" className="hover:text-white">FAQ</a>
-        </nav>
-        <div className="flex items-center gap-3">
-          <button className="hidden md:inline-flex rounded-xl px-4 py-2 text-sm bg-white/5 hover:bg-white/10">Sign in</button>
-          <button className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 px-4 py-2 text-sm font-semibold shadow-lg shadow-red-600/20 hover:opacity-95">
-            Get started <ArrowRight className="h-4 w-4"/>
-          </button>
-        </div>
+        <span class="font-semibold tracking-tight">ViralLab</span>
+        <span class="ml-2 rounded-full bg-white/5 px-2.5 py-1 text-xs text-white/70">for Artists</span>
       </div>
-    </header>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="mx-auto max-w-7xl px-6 pt-20 pb-10">
-      <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
-        <div className="lg:col-span-7">
-          <motion.h1 initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.6}}
-            className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
-            Your AI Label Marketing Team —
-            <br />
-            <span className="bg-gradient-to-r from-red-500 via-amber-400 to-fuchsia-500 bg-clip-text text-transparent">blow up without a label</span>
-          </motion.h1>
-          <p className="mt-6 max-w-2xl text-white/70">
-            ViralLab researches every trend, sound, and format in your niche — then builds a daily posting plan, writes captions & hashtags, and even auto‑publishes across TikTok, Instagram, and YouTube. It learns from your results and adjusts each week.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <a href="#pricing" className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 px-5 py-3 font-semibold shadow-lg shadow-red-600/20">
-              Start free <ArrowRight className="h-4 w-4"/>
-            </a>
-            <button className="rounded-xl px-5 py-3 bg-white/5 hover:bg-white/10">Watch 90s demo</button>
-            <span className="text-xs text-white/60">No credit card • Cancel anytime</span>
-          </div>
-          <div className="mt-8 flex items-center gap-6 text-xs text-white/60">
-            <div className="flex items-center gap-2"><Shield className="h-4 w-4"/> Privacy-first</div>
-            <div className="flex items-center gap-2"><Zap className="h-4 w-4"/> Built on n8n + LLMs</div>
-            <div className="flex items-center gap-2"><Flame className="h-4 w-4"/> Trend-aware</div>
-          </div>
-        </div>
-        <div className="lg:col-span-5">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl">
-            <div className="rounded-xl bg-gradient-to-br from-white/5 to-white/0 p-4">
-              <HeroPreview />
-            </div>
-          </div>
-          <p className="mt-3 text-center text-xs text-white/60">Mock dashboard preview</p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function HeroPreview(){
-  return (
-    <div className="grid gap-4">
-      <div className="rounded-xl bg-black/60 border border-white/10 p-4">
-        <div className="flex items-center justify-between">
-          <div className="text-sm font-semibold">Today’s Post</div>
-          <span className="text-xs text-white/60">TikTok • 3:30 PM</span>
-        </div>
-        <div className="mt-3 text-sm text-white/80">Hook test with trending sound <span className="font-semibold">“Midnight Drive”</span>. Show 15s booth clip, lyric on-screen, CTA: “Duet this with your verse.”</div>
-        <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/70">
-          <span className="rounded-full bg-white/10 px-2 py-1">#undergroundrap</span>
-          <span className="rounded-full bg-white/10 px-2 py-1">#hookchallenge</span>
-          <span className="rounded-full bg-white/10 px-2 py-1">#fyp</span>
-        </div>
-      </div>
-      <div className="rounded-xl bg-black/60 border border-white/10 p-4">
-        <div className="flex items-center gap-2 text-sm font-semibold"><Flame className="h-4 w-4"/> Rising trends in your niche</div>
-        <ul className="mt-3 space-y-2 text-sm text-white/80 list-disc pl-5">
-          <li>15s studio reveal + duet-friendly caption</li>
-          <li>Before/after mix (0:00 vs 0:07 impact)</li>
-          <li>POV lyric overlays with fast-cut B‑roll</li>
-        </ul>
+      <nav class="hidden md:flex items-center gap-8 text-sm text-white/80">
+        <a href="#features" class="hover:text-white">Features</a>
+        <a href="#how" class="hover:text-white">How it works</a>
+        <a href="#pricing" class="hover:text-white">Pricing</a>
+        <a href="#faq" class="hover:text-white">FAQ</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <button class="hidden md:inline-flex rounded-xl px-4 py-2 text-sm bg-white/5 hover:bg-white/10">Sign in</button>
+        <a href="#pricing" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand1 to-brand2 px-4 py-2 text-sm font-semibold shadow-lg shadow-red-600/20 hover:opacity-95">
+          Get started
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
       </div>
     </div>
-  );
-}
+  </header>
 
-function SocialProof(){
-  return (
-    <section className="mx-auto max-w-7xl px-6 py-10">
-      <div className="grid gap-6 md:grid-cols-3">
-        {[
-          {kpi:"+43%", label:"avg. 7‑day view lift after 1 month"},
-          {kpi:"3×", label:"faster posting consistency"},
-          {kpi:"~12h", label:"saved per week vs DIY planning"},
-        ].map((i,idx)=> (
-          <div key={idx} className="rounded-2xl bg-white/5 border border-white/10 p-6 text-center">
-            <div className="text-3xl font-bold">{i.kpi}</div>
-            <div className="mt-2 text-sm text-white/70">{i.label}</div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function FeatureGrid(){
-  const items = [
-    {
-      icon: <Calendar className="h-5 w-5"/>,
-      title: "AI Strategy Scheduling",
-      desc: "Label‑grade calendars tuned to your genre, audience peaks, and release cycle.",
-    },
-    {
-      icon: <Flame className="h-5 w-5"/>,
-      title: "Viral Trend Intelligence",
-      desc: "Live scanning of sounds, challenges, and formats filtered for your sub‑genre.",
-    },
-    {
-      icon: <Wand2 className="h-5 w-5"/>,
-      title: "Custom Prompt Engine",
-      desc: "Lyric hooks, shot lists, captions, and hashtags — generated for each post slot.",
-    },
-    {
-      icon: <UploadCloud className="h-5 w-5"/>,
-      title: "Auto‑Publish Everywhere",
-      desc: "One click to TikTok, Instagram, and YouTube Shorts with per‑platform optimization.",
-    },
-    {
-      icon: <BarChart3 className="h-5 w-5"/>,
-      title: "AI Performance Lab",
-      desc: "Retention, velocity, and pattern analysis to adapt next week automatically.",
-    },
-    {
-      icon: <Bell className="h-5 w-5"/>,
-      title: "Smart Reminders",
-      desc: "Email, SMS, and Discord nudges timed to your fans’ activity windows.",
-    },
-  ];
-  return (
-    <section id="features" className="mx-auto max-w-7xl px-6 py-16">
-      <div className="mb-10 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">Everything a label’s growth team would do — automated</h2>
-        <p className="mt-3 text-white/70">Built on n8n orchestration + LLMs, fine‑tuned for music creators.</p>
-      </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((f, i) => (
-          <div key={i} className="rounded-2xl bg-white/5 border border-white/10 p-6">
-            <div className="mb-3 inline-flex items-center justify-center rounded-lg bg-white/10 p-2">{f.icon}</div>
-            <h3 className="text-lg font-semibold">{f.title}</h3>
-            <p className="mt-2 text-sm text-white/70">{f.desc}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function HowItWorks(){
-  const steps = [
-    {title:"Tell us your lane", desc:"Pick genre, niche, goals, and platforms.", icon: Music2},
-    {title:"We research what’s working", desc:"Our crawlers and models scan viral sounds & formats in your niche.", icon: Flame},
-    {title:"Get a weekly plan", desc:"A month view + daily prompts, captions, and hashtag packs.", icon: Calendar},
-    {title:"Auto‑publish & learn", desc:"Schedule everywhere, track performance, and auto‑optimize the next week.", icon: BarChart3},
-  ];
-  return (
-    <section id="how" className="mx-auto max-w-7xl px-6 py-16">
-      <div className="mb-10 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">How it works</h2>
-        <p className="mt-3 text-white/70">From niche intel → posts → momentum.</p>
-      </div>
-      <div className="grid gap-6 md:grid-cols-4">
-        {steps.map((s, i) => (
-          <div key={i} className="rounded-2xl bg-white/5 border border-white/10 p-6">
-            <div className="mb-3 inline-flex rounded-lg bg-white/10 p-2">
-              {React.createElement(s.icon, {className:"h-5 w-5"})}
-            </div>
-            <h3 className="text-lg font-semibold">{s.title}</h3>
-            <p className="mt-2 text-sm text-white/70">{s.desc}</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function DemoBanner(){
-  return (
-    <section className="mx-auto max-w-7xl px-6 pb-8">
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-r from-white/10 to-white/0 p-6 flex items-center justify-between gap-4">
-        <div>
-          <div className="text-lg font-semibold">See a schedule generated from live trends</div>
-          <p className="text-sm text-white/70">Pick your genre and we’ll create a 7‑day plan in seconds.</p>
-        </div>
-        <button className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 hover:bg-white/15">
-          <PlayCircle className="h-4 w-4"/> Try demo
-        </button>
-      </div>
-    </section>
-  );
-}
-
-function Pricing(){
-  const tiers = [
-    {
-      name:"Free",
-      price:"$0",
-      blurb:"Try the engine",
-      features:["Weekly prompt sample","Basic trend snapshot","Email support"],
-      cta:"Start Free"
-    },
-    {
-      name:"Creator",
-      price:"$15",
-      badge:"Most Popular",
-      blurb:"Serious momentum",
-      features:["Full daily/weekly schedules","Email & SMS reminders","Trend intelligence","Multi‑platform scheduling","Priority support"],
-      cta:"Get Started"
-    },
-    {
-      name:"Pro",
-      price:"$49",
-      blurb:"Scale like a label",
-      features:["Everything in Creator","Performance analytics","Auto‑optimization feedback loop","Discord integration","Custom trend reports","Dedicated support"],
-      cta:"Go Pro"
-    },
-  ];
-  return (
-    <section id="pricing" className="mx-auto max-w-7xl px-6 py-20">
-      <div className="mb-10 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold">Choose your come‑up</h2>
-        <p className="mt-3 text-white/70">Start free. Upgrade when you’re ready to scale.</p>
-      </div>
-      <div className="grid gap-6 md:grid-cols-3">
-        {tiers.map((t, i)=> (
-          <div key={i} className={`relative rounded-2xl border p-6 ${t.name==="Creator" ? "border-red-500/40 bg-red-500/10" : "border-white/10 bg-white/5"}`}>
-            {t.badge && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-red-600 to-amber-500 px-3 py-1 text-xs font-semibold">{t.badge}</div>
-            )}
-            <div className="text-lg font-semibold">{t.name}</div>
-            <div className="mt-1 text-3xl font-extrabold">{t.price}<span className="text-base font-medium text-white/70">/month</span></div>
-            <p className="mt-2 text-sm text-white/70">{t.blurb}</p>
-            <ul className="mt-6 space-y-2 text-sm">
-              {t.features.map((f, idx)=> (
-                <li key={idx} className="flex items-start gap-2 text-white/80"><Check className="mt-0.5 h-4 w-4 text-emerald-400"/>{f}</li>
-              ))}
-            </ul>
-            <button className={`mt-6 w-full rounded-xl px-4 py-2 font-semibold ${t.name==="Creator"?"bg-gradient-to-r from-red-600 to-amber-500":"bg-white/10 hover:bg-white/15"}`}>{t.cta}</button>
-            <p className="mt-3 text-xs text-white/60">Cancel anytime • Annual plans save 2 months</p>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function FAQ(){
-  const qs = [
-    {q:"How does it find trends?", a:"We continuously scan public charts, audio libraries, and viral formats, then filter by your genre using our classifiers."},
-    {q:"Do I have to post manually?", a:"No. Connect TikTok, Instagram, and YouTube — schedule once and we auto‑publish with the right formats, captions, and hashtags."},
-    {q:"Will it copy other artists?", a:"Never. We learn from patterns, not people. Your prompts and content ideas are unique to your brand and voice."},
-    {q:"What’s the tech behind this?", a:"n8n orchestrates crawlers, LLM prompt engines, and analytics. We store nothing we don’t need and respect platform policies."},
-  ];
-  return (
-    <section id="faq" className="mx-auto max-w-5xl px-6 py-16">
-      <h2 className="text-center text-3xl md:text-4xl font-bold">Questions, answered</h2>
-      <div className="mt-8 divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/5">
-        {qs.map((item, i)=> (
-          <details key={i} className="group p-6 open:bg-white/0">
-            <summary className="flex cursor-pointer list-none items-center justify-between text-left text-lg font-medium">
-              {item.q}
-              <span className="ml-4 text-white/50 group-open:rotate-45 transition"><PlusIcon /></span>
-            </summary>
-            <p className="mt-3 text-white/70 text-sm">{item.a}</p>
-          </details>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function PlusIcon(){
-  return <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-}
-
-function CTA(){
-  return (
-    <section className="mx-auto max-w-6xl px-6 pb-24">
-      <div className="rounded-3xl border border-white/10 bg-gradient-to-r from-red-600/20 via-fuchsia-600/10 to-amber-500/20 p-10 text-center">
-        <h3 className="text-3xl font-bold">Ready to post like you’ve got a label behind you?</h3>
-        <p className="mt-3 text-white/80">Generate your first 7‑day plan free. No credit card.</p>
-        <div className="mt-6 flex justify-center gap-3">
-          <a href="#pricing" className="inline-flex items-center gap-2 rounded-xl bg-white text-black px-6 py-3 font-semibold">
-            Start free <ArrowRight className="h-4 w-4"/>
+  <!-- Hero -->
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-10">
+    <div class="grid gap-10 lg:grid-cols-12 lg:items-center">
+      <div class="lg:col-span-7">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight tracking-tight">
+          Your AI Label Marketing Team —<br>
+          <span class="bg-gradient-to-r from-brand1 via-brand2 to-brand3 bg-clip-text text-transparent">blow up without a label</span>
+        </h1>
+        <p class="mt-6 max-w-2xl text-white/70">
+          ViralLab researches every trend, sound, and format in your niche — then builds a daily posting plan, writes captions & hashtags, and auto-publishes across TikTok, Instagram, and YouTube. It learns from your results and adjusts each week.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="#pricing" class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand1 to-brand2 px-5 py-3 font-semibold shadow-lg shadow-red-600/20">
+            Start free
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
-          <button className="rounded-xl px-6 py-3 bg-white/10 hover:bg-white/15">See how it works</button>
+          <button class="rounded-xl px-5 py-3 bg-white/5 hover:bg-white/10">Watch 90s demo</button>
+          <span class="text-xs text-white/60">No credit card • Cancel anytime</span>
+        </div>
+        <div class="mt-8 flex items-center gap-6 text-xs text-white/60">
+          <div class="flex items-center gap-2">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Privacy-first
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1M12 8h.01"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+            Built on n8n + LLMs
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21l8-18M17 14H9"/></svg>
+            Trend-aware
+          </div>
         </div>
       </div>
-    </section>
-  );
-}
 
-function Footer(){
-  return (
-    <footer className="border-t border-white/10 bg-black/60">
-      <div className="mx-auto max-w-7xl px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 grid place-items-center rounded-xl bg-gradient-to-br from-red-500 to-amber-400"><Sparkles className="h-5 w-5"/></div>
-          <span className="font-semibold tracking-tight">ViralLab</span>
-          <span className="ml-2 text-xs text-white/60">© {new Date().getFullYear()}</span>
+      <!-- Mock preview -->
+      <div class="lg:col-span-5">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 shadow-2xl">
+          <div class="rounded-xl bg-gradient-to-br from-white/5 to-white/0 p-4 grid gap-4">
+            <div class="rounded-xl bg-black/60 border border-white/10 p-4">
+              <div class="flex items-center justify-between">
+                <div class="text-sm font-semibold">Today’s Post</div>
+                <span class="text-xs text-white/60">TikTok • 3:30 PM</span>
+              </div>
+              <div class="mt-3 text-sm text-white/80">
+                Hook test with trending sound <span class="font-semibold">“Midnight Drive”</span>. Show 15s booth clip, lyric on-screen, CTA: “Duet this with your verse.”
+              </div>
+              <div class="mt-3 flex flex-wrap gap-2 text-xs text-white/70">
+                <span class="rounded-full bg-white/10 px-2 py-1">#undergroundrap</span>
+                <span class="rounded-full bg-white/10 px-2 py-1">#hookchallenge</span>
+                <span class="rounded-full bg-white/10 px-2 py-1">#fyp</span>
+              </div>
+            </div>
+            <div class="rounded-xl bg-black/60 border border-white/10 p-4">
+              <div class="flex items-center gap-2 text-sm font-semibold">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 21l8-18M17 14H9"/></svg>
+                Rising trends in your niche
+              </div>
+              <ul class="mt-3 space-y-2 text-sm text-white/80 list-disc pl-5">
+                <li>15s studio reveal + duet-friendly caption</li>
+                <li>Before/after mix (0:00 vs 0:07 impact)</li>
+                <li>POV lyric overlays with fast-cut B-roll</li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div className="text-sm text-white/60">Privacy • Terms • Contact</div>
+        <p class="mt-3 text-center text-xs text-white/60">Mock dashboard preview</p>
       </div>
-    </footer>
-  );
-}
+    </div>
+  </section>
+
+  <!-- Social proof -->
+  <section class="max-w-7xl mx-auto px-6 py-10">
+    <div class="grid gap-6 md:grid-cols-3">
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6 text-center">
+        <div class="text-3xl font-bold">+43%</div>
+        <div class="mt-2 text-sm text-white/70">avg. 7-day view lift after 1 month</div>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6 text-center">
+        <div class="text-3xl font-bold">3×</div>
+        <div class="mt-2 text-sm text-white/70">faster posting consistency</div>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6 text-center">
+        <div class="text-3xl font-bold">~12h</div>
+        <div class="mt-2 text-sm text-white/70">saved per week vs DIY planning</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="max-w-7xl mx-auto px-6 py-16">
+    <div class="mb-10 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold">Everything a label’s growth team would do — automated</h2>
+      <p class="mt-3 text-white/70">Built on n8n orchestration + LLMs, fine-tuned for music creators.</p>
+    </div>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- feature card -->
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex items-center justify-center rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">AI Strategy Scheduling</h3>
+        <p class="mt-2 text-sm text-white/70">Label-grade calendars tuned to your genre, audience peaks, and release cycle.</p>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex items-center justify-center rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7l2 3h9v13H3z"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">Viral Trend Intelligence</h3>
+        <p class="mt-2 text-sm text-white/70">Live scanning of sounds, challenges, and formats filtered for your sub-genre.</p>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex items-center justify-center rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">Custom Prompt Engine</h3>
+        <p class="mt-2 text-sm text-white/70">Lyric hooks, shot lists, captions, and hashtags — generated for each post slot.</p>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex items-center justify-center rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">Auto-Publish Everywhere</h3>
+        <p class="mt-2 text-sm text-white/70">One click to TikTok, Instagram, and YouTube Shorts with per-platform optimization.</p>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex items-center justify-center rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9l-8 8V9"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">AI Performance Lab</h3>
+        <p class="mt-2 text-sm text-white/70">Retention, velocity, and pattern analysis to adapt next week automatically.</p>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex items-center justify-center rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0v5l-2 2h16l-2-2V8"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">Smart Reminders</h3>
+        <p class="mt-2 text-sm text-white/70">Email, SMS, and Discord nudges timed to your fans’ activity windows.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how" class="max-w-7xl mx-auto px-6 py-16">
+    <div class="mb-10 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold">How it works</h2>
+      <p class="mt-3 text-white/70">From niche intel → posts → momentum.</p>
+    </div>
+    <div class="grid gap-6 md:grid-cols-4">
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><path d="M3 22V9l6-1"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">Tell us your lane</h3>
+        <p class="mt-2 text-sm text-white/70">Pick genre, niche, goals, and platforms.</p>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15V6a2 2 0 0 0-2-2h-5"/><path d="M3 10v8a2 2 0 0 0 2 2h7"/><path d="M7 10h10"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">We research what’s working</h3>
+        <p class="mt-2 text-sm text-white/70">Crawlers and models scan viral sounds & formats in your niche.</p>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">Get a weekly plan</h3>
+        <p class="mt-2 text-sm text-white/70">Month view + daily prompts, captions, and hashtag packs.</p>
+      </div>
+      <div class="rounded-2xl bg-white/5 border border-white/10 p-6">
+        <div class="mb-3 inline-flex rounded-lg bg-white/10 p-2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9l-8 8V9"/></svg>
+        </div>
+        <h3 class="text-lg font-semibold">Auto-publish & learn</h3>
+        <p class="mt-2 text-sm text-white/70">Schedule everywhere, track performance, auto-optimize next week.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo banner -->
+  <section class="max-w-7xl mx-auto px-6 pb-8">
+    <div class="rounded-2xl border border-white/10 bg-gradient-to-r from-white/10 to-white/0 p-6 flex items-center justify-between gap-4">
+      <div>
+        <div class="text-lg font-semibold">See a schedule generated from live trends</div>
+        <p class="text-sm text-white/70">Pick your genre and we’ll create a 7-day plan in seconds.</p>
+      </div>
+      <button class="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2 hover:bg-white/15">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Try demo
+      </button>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="max-w-7xl mx-auto px-6 py-20">
+    <div class="mb-10 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold">Choose your come-up</h2>
+      <p class="mt-3 text-white/70">Start free. Upgrade when you’re ready to scale.</p>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      <!-- Free -->
+      <div class="relative rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div class="text-lg font-semibold">Free</div>
+        <div class="mt-1 text-3xl font-extrabold">$0<span class="text-base font-medium text-white/70">/month</span></div>
+        <p class="mt-2 text-sm text-white/70">Try the engine</p>
+        <ul class="mt-6 space-y-2 text-sm">
+          <li class="flex gap-2"><span>✅</span>Weekly prompt sample</li>
+          <li class="flex gap-2"><span>✅</span>Basic trend snapshot</li>
+          <li class="flex gap-2"><span>✅</span>Email support</li>
+        </ul>
+        <button class="mt-6 w-full rounded-xl bg-white/10 hover:bg-white/15 px-4 py-2 font-semibold">Start Free</button>
+        <p class="mt-3 text-xs text-white/60">Cancel anytime • Annual plans save 2 months</p>
+      </div>
+      <!-- Creator -->
+      <div class="relative rounded-2xl border border-brand1/40 bg-brand1/10 p-6">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-brand1 to-brand2 px-3 py-1 text-xs font-semibold">Most Popular</div>
+        <div class="text-lg font-semibold">Creator</div>
+        <div class="mt-1 text-3xl font-extrabold">$15<span class="text-base font-medium text-white/70">/month</span></div>
+        <p class="mt-2 text-sm text-white/70">Serious momentum</p>
+        <ul class="mt-6 space-y-2 text-sm">
+          <li class="flex gap-2"><span>✅</span>Full daily/weekly schedules</li>
+          <li class="flex gap-2"><span>✅</span>Email & SMS reminders</li>
+          <li class="flex gap-2"><span>✅</span>Trend intelligence</li>
+          <li class="flex gap-2"><span>✅</span>Multi-platform scheduling</li>
+          <li class="flex gap-2"><span>✅</span>Priority support</li>
+        </ul>
+        <button class="mt-6 w-full rounded-xl bg-gradient-to-r from-brand1 to-brand2 px-4 py-2 font-semibold">Get Started</button>
+        <p class="mt-3 text-xs text-white/60">Cancel anytime • Annual plans save 2 months</p>
+      </div>
+      <!-- Pro -->
+      <div class="relative rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div class="text-lg font-semibold">Pro</div>
+        <div class="mt-1 text-3xl font-extrabold">$49<span class="text-base font-medium text-white/70">/month</span></div>
+        <p class="mt-2 text-sm text-white/70">Scale like a label</p>
+        <ul class="mt-6 space-y-2 text-sm">
+          <li class="flex gap-2"><span>✅</span>Everything in Creator</li>
+          <li class="flex gap-2"><span>✅</span>Performance analytics</li>
+          <li class="flex gap-2"><span>✅</span>Auto-optimization feedback loop</li>
+          <li class="flex gap-2"><span>✅</span>Discord integration</li>
+          <li class="flex gap-2"><span>✅</span>Custom trend reports</li>
+          <li class="flex gap-2"><span>✅</span>Dedicated support</li>
+        </ul>
+        <button class="mt-6 w-full rounded-xl bg-white/10 hover:bg-white/15 px-4 py-2 font-semibold">Go Pro</button>
+        <p class="mt-3 text-xs text-white/60">Cancel anytime • Annual plans save 2 months</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="max-w-5xl mx-auto px-6 py-16">
+    <h2 class="text-center text-3xl md:text-4xl font-bold">Questions, answered</h2>
+    <div class="mt-8 divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/5">
+      <details class="group p-6 open:bg-white/0">
+        <summary class="flex cursor-pointer items-center justify-between text-left text-lg font-medium">
+          How does it find trends?
+          <span class="caret ml-4 text-white/50 transition select-none">＋</span>
+        </summary>
+        <p class="mt-3 text-white/70 text-sm">We continuously scan public charts, audio libraries, and viral formats, then filter by your genre using our classifiers.</p>
+      </details>
+      <details class="group p-6">
+        <summary class="flex cursor-pointer items-center justify-between text-left text-lg font-medium">
+          Do I have to post manually?
+          <span class="caret ml-4 text-white/50 transition select-none">＋</span>
+        </summary>
+        <p class="mt-3 text-white/70 text-sm">Connect TikTok, Instagram, and YouTube — schedule once and we auto-publish with the right formats, captions, and hashtags.</p>
+      </details>
+      <details class="group p-6">
+        <summary class="flex cursor-pointer items-center justify-between text-left text-lg font-medium">
+          Will it copy other artists?
+          <span class="caret ml-4 text-white/50 transition select-none">＋</span>
+        </summary>
+        <p class="mt-3 text-white/70 text-sm">Never. We learn from patterns, not people. Your prompts and ideas are unique to your brand and voice.</p>
+      </details>
+      <details class="group p-6">
+        <summary class="flex cursor-pointer items-center justify-between text-left text-lg font-medium">
+          What’s the tech behind this?
+          <span class="caret ml-4 text-white/50 transition select-none">＋</span>
+        </summary>
+        <p class="mt-3 text-white/70 text-sm">n8n orchestrates crawlers, LLM prompt engines, and analytics. We store nothing we don’t need and respect platform policies.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="max-w-6xl mx-auto px-6 pb-24">
+    <div class="rounded-3xl border border-white/10 bg-gradient-to-r from-brand1/20 via-brand3/10 to-brand2/20 p-10 text-center">
+      <h3 class="text-3xl font-bold">Ready to post like you’ve got a label behind you?</h3>
+      <p class="mt-3 text-white/80">Generate your first 7-day plan free. No credit card.</p>
+      <div class="mt-6 flex justify-center gap-3">
+        <a href="#pricing" class="inline-flex items-center gap-2 rounded-xl bg-white text-black px-6 py-3 font-semibold">
+          Start free
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#how" class="rounded-xl px-6 py-3 bg-white/10 hover:bg-white/15">See how it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-white/10 bg-black/60">
+    <div class="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 grid place-items-center rounded-xl bg-gradient-to-br from-brand1 to-brand2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 3l1.5 3.5L17 8l-3.5 1.5L12 13l-1.5-3.5L7 8l3.5-1.5L12 3z"/>
+          </svg>
+        </div>
+        <span class="font-semibold tracking-tight">ViralLab</span>
+        <span class="ml-2 text-xs text-white/60">© <span id="year"></span></span>
+      </div>
+      <div class="text-sm text-white/60">Privacy • Terms • Contact</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+
