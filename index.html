@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -30,7 +31,7 @@
     details summary::-webkit-details-marker { display:none; }
     details[open] .caret { transform:rotate(45deg); }
 
-    /* glass card helpers */
+    /* glass card helpers (used elsewhere) */
     .card {
       background: rgba(17,17,17,.75);
       border: 1px solid rgba(255,255,255,.08);
@@ -115,27 +116,19 @@
         </div>
       </div>
 
-     <!-- RIGHT SIDE: plain video only -->
-<div class="lg:col-span-5" id="video">
-  <!-- Replace the src with your VSL link -->
-  <div class="relative w-full" style="padding-top:56.25%;">
-    <iframe
-      class="absolute inset-0 w-full h-full"
-      src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-      title="ViralLab VSL"
-      frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowfullscreen>
-    </iframe>
-  </div>
-</div>
-              <p class="mt-3 text-sm text-white/70">
-                A quick walkthrough showing trend intelligence, schedule generation, auto-publishing, and performance optimization.
-              </p>
-            </div>
-          </div>
+      <!-- RIGHT SIDE: single plain rounded video -->
+      <div class="lg:col-span-5" id="video">
+        <div class="relative w-full rounded-2xl overflow-hidden shadow-2xl shadow-black/40" style="padding-top:56.25%;">
+          <!-- Replace src with your YouTube embed URL, or swap to <video> if self-hosted -->
+          <iframe
+            class="absolute inset-0 w-full h-full rounded-2xl"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            title="ViralLab VSL"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen>
+          </iframe>
         </div>
-        <p class="mt-3 text-center text-xs text-white/60">Product video</p>
       </div>
     </div>
   </section>
@@ -389,6 +382,5 @@
   </script>
 </body>
 </html>
-
 
 
