@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ViralLab — Dashboard</title>
+  <meta name="description" content="AI Label Marketing Team Dashboard for artists: schedules, trends, auto-poster, analytics, and insights.">
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand1:'#ef4444', brand2:'#f59e0b', brand3:'#a855f7', ink:'#0b0b0b' }
+        }
+      }
+    }
+  </script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    /* background halos */
+    body.bg-halo::before, body.bg-halo::after{
+      content:""; position:fixed; inset:auto; pointer-events:none; z-index:-1; filter:blur(100px);
+    }
+    body.bg-halo::before{ top:-140px; left:50%; transform:translateX(-50%); width:1100px; height:1100px;
+      background: radial-gradient(40% 40% at 50% 50%, rgba(239,68,68,.28), rgba(245,158,11,.18) 45%, rgba(168,85,247,.12) 70%, transparent 80%); }
+    body.bg-halo::after{ right:-260px; bottom:-260px; width:900px; height:900px;
+      background: radial-gradient(40% 40% at 50% 50%, rgba(6,182,212,.18), rgba(168,85,247,.12) 45%, transparent 70%); }
+    .card { background: rgba(18,18,18,.7); border:1px solid rgba(255,255,255,.08); border-radius:16px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    .chip { @apply inline-flex items-center rounded-full bg-white/10 px-2 py-1 text-xs text-white/80; }
+    .btn { @apply inline-flex items-center gap-2 rounded-xl px-3.5 py-2 font-medium; }
+    .btn-primary { @apply bg-gradient-to-r from-brand1 to-brand2 text-white shadow-lg shadow-red-600/20 hover:opacity-95; }
+    .btn-ghost { @apply bg-white/5 hover:bg-white/10 text-white; }
+    .btn-outline { @apply border border-white/10 bg-black/20 hover:bg-white/10 text-white; }
+    .divider { @apply border-t border-white/10; }
+    .scroll-slim::-webkit-scrollbar{ height:8px; width:8px }
+    .scroll-slim::-webkit-scrollbar-thumb{ background:rgba(255,255,255,.12); border-radius:9999px }
+    .kpi { @apply text-sm text-white/60; }
+    /* modal */
+    .modal { display:none; }
+    .modal.open { display:flex; }
+    /* simple toast */
+    #toast { opacity:0; transform:translateY(6px); transition: all .25s ease; }
+    #toast.show { opacity:1; transform:translateY(0); }
+  </style>
+</head>
+<body class="bg-black text-white bg-halo">
+
+  <!-- Top bar -->
+  <header class="sticky top-0 z-40 backdrop-blur bg-black/50 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 grid place-items-center rounded-xl bg-gradient-to-br from-brand1 to-brand2">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 3.5L17 8l-3.5 1.5L12 13l-1.5-3.5L7 8l3.5-1.5L12 3z"/></svg>
+        </div>
+        <span class="font-semibold tracking-tight">ViralLab</span>
+        <span class="ml-2 rounded-full bg-white/5 px-2.5 py-1 text-xs text-white/70">Dashboard</span>
+      </div>
+      <div class="hidden md:flex items-center gap-2 flex-1 max-w-xl mx-6">
+        <div class="flex items-center gap-2 flex-1 rounded-xl bg-white/5 px-3 py-2">
+          <svg class="h-4 w-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="search" type="text" placeholder="Search posts, sounds, captions…" class="bg-transparent w-full outline-none text-sm placeholder:text-white/50">
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btnGenerateWeek" class="btn btn-primary">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          Generate Week
+        </button>
+        <button id="btnConnect" class="btn btn-ghost">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0v5l-2 2h16l-2-2V8"/></svg>
+          Connect
+        </button>
+        <div class="h-9 w-9 rounded-full bg-white/10 grid place-items-center">
+          <span class="text-xs">EM</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Shell -->
+  <div class="max-w-7xl mx-auto px-6 py-6 grid grid-cols-12 gap-6">
+
+    <!-- Sidebar -->
+    <aside class="col-span-12 lg:col-span-3">
+      <nav class="card p-3 sticky top-[76px]">
+        <div class="text-xs uppercase tracking-wider text-white/50 px-2 pb-2">Navigation</div>
+        <ul class="space-y-1">
+          <li><button data-tab="schedule" class="tablink w-full text-left btn btn-outline justify-start"><span>📅</span> Schedule</button></li>
+          <li><button data-tab="trends" class="tablink w-full text-left btn btn-outline justify-start"><span>🔥</span> Trend Intelligence</button></li>
+          <li><button data-tab="autoposter" class="tablink w-full text-left btn btn-outline justify-start"><span>🤖</span> Auto-Poster</button></li>
+          <li><button data-tab="analytics" class="tablink w-full text-left btn btn-outline justify-start"><span>📈</span> Analytics</button></li>
+          <li><button data-tab="insights" class="tablink w-full text-left btn btn-outline justify-start"><span>🧠</span> Insights</button></li>
+          <li><button data-tab="library" class="tablink w-full text-left btn btn-outline justify-start"><span>🎞️</span> Library</button></li>
+          <li><button data-tab="settings" class="tablink w-full text-left btn btn-outline justify-start"><span>⚙️</span> Settings</button></li>
+        </ul>
+        <div class="divider my-3"></div>
+        <div class="px-2">
+          <div class="text-xs text-white/60 mb-2">Profile completion</div>
+          <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-brand1 to-brand2 w-2/3"></div>
+          </div>
+          <div class="text-[11px] text-white/50 mt-1">Add your TikTok to unlock auto-posting</div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="col-span-12 lg:col-span-9 space-y-6">
+
+      <!-- SCHEDULE TAB -->
+      <section id="tab-schedule" class="tab card p-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-sm text-white/60">Week of</div>
+            <h2 class="text-2xl font-semibold">Mar 3 — Mar 9</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn btn-ghost" id="btnAddSlot">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+              Add slot
+            </button>
+            <button class="btn btn-primary" id="btnPublishAll">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              Publish week
+            </button>
+          </div>
+        </div>
+
+        <!-- calendar grid -->
+        <div class="mt-4 grid grid-cols-7 gap-3">
+          <!-- column header -->
+          <template id="dayHeaderTpl">
+            <div class="text-white/70 text-sm px-1"></div>
+          </template>
+          <template id="slotTpl">
+            <div class="rounded-xl border border-white/10 bg-white/5 p-3 space-y-2 hover:bg-white/10 cursor-pointer">
+              <div class="flex items-center justify-between">
+                <span class="text-xs text-white/60 platform">TikTok • 3:30 PM</span>
+                <span class="chip">#undergroundrap</span>
+              </div>
+              <div class="text-sm font-medium line-clamp-2">Hook test with trending sound “Midnight Drive”. CTA: Duet this with your verse.</div>
+              <div class="flex items-center gap-2">
+                <button class="btn btn-ghost text-xs px-2 py-1 rounded-lg editSlot">Edit</button>
+                <button class="btn btn-ghost text-xs px-2 py-1 rounded-lg">Preview</button>
+                <button class="btn btn-ghost text-xs px-2 py-1 rounded-lg">Open</button>
+              </div>
+            </div>
+          </template>
+
+          <!-- headers -->
+          <div class="text-white/60 text-xs">Sun</div>
+          <div class="text-white/60 text-xs">Mon</div>
+          <div class="text-white/60 text-xs">Tue</div>
+          <div class="text-white/60 text-xs">Wed</div>
+          <div class="text-white/60 text-xs">Thu</div>
+          <div class="text-white/60 text-xs">Fri</div>
+          <div class="text-white/60 text-xs">Sat</div>
+
+          <!-- rows: each day col houses a stack -->
+          <div id="col0" class="min-h-[140px] space-y-3"></div>
+          <div id="col1" class="min-h-[140px] space-y-3"></div>
+          <div id="col2" class="min-h-[140px] space-y-3"></div>
+          <div id="col3" class="min-h-[140px] space-y-3"></div>
+          <div id="col4" class="min-h-[140px] space-y-3"></div>
+          <div id="col5" class="min-h-[140px] space-y-3"></div>
+          <div id="col6" class="min-h-[140px] space-y-3"></div>
+        </div>
+
+        <div class="divider my-4"></div>
+
+        <!-- quick tips -->
+        <div class="grid md:grid-cols-3 gap-3">
+          <div class="rounded-xl bg-white/5 border border-white/10 p-3">
+            <div class="text-sm font-semibold">Genre insights</div>
+            <p class="kpi mt-1">“Hook reveals” outperform other formats in underground rap by 2.6× this week.</p>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-3">
+            <div class="text-sm font-semibold">Optimal windows</div>
+            <p class="kpi mt-1">Your audience peaks Tue/Thu 3–5pm, Sat 11am–1pm.</p>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-3">
+            <div class="text-sm font-semibold">Auto-optimizations</div>
+            <p class="kpi mt-1">We moved 2 posts to earlier slots based on retention last week.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRENDS TAB -->
+      <section id="tab-trends" class="tab card p-4 hidden">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-semibold">Trend Intelligence</h2>
+          <div class="flex items-center gap-2">
+            <select class="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm">
+              <option>Underground Rap</option>
+              <option>Indie Pop</option>
+              <option>Drill</option>
+              <option>Alt R&B</option>
+            </select>
+            <button class="btn btn-ghost">Refresh</button>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-4 mt-4">
+          <!-- trend card -->
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-sm font-semibold flex items-center justify-between">
+              Sound: “Night Drive”
+              <span class="chip">YouTube Shorts</span>
+            </div>
+            <p class="kpi mt-2">Use punch-in cuts at 0:00, 0:07, 0:14. Overlay chorus word for word.</p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="chip">#hookchallenge</span>
+              <span class="chip">#duetthis</span>
+              <span class="chip">#fyp</span>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <button class="btn btn-primary text-xs">Save Idea</button>
+              <button class="btn btn-ghost text-xs">Open on YouTube</button>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-sm font-semibold flex items-center justify-between">
+              Format: Before/After Mix
+              <span class="chip">TikTok</span>
+            </div>
+            <p class="kpi mt-2">Show the punch after 7s; high-contrast thumbnail text works best.</p>
+            <div class="mt-3 flex items-center gap-2">
+              <button class="btn btn-primary text-xs">Save Idea</button>
+              <button class="btn btn-ghost text-xs">Open Trend</button>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-sm font-semibold flex items-center justify-between">
+              Hook Concept: Studio Reveal
+              <span class="chip">IG Reels</span>
+            </div>
+            <p class="kpi mt-2">15s reveal + duet-friendly caption drives 1.9× comments in your niche.</p>
+            <div class="mt-3 flex items-center gap-2">
+              <button class="btn btn-primary text-xs">Save Idea</button>
+              <button class="btn btn-ghost text-xs">Open Reel</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- AUTO-POSTER TAB -->
+      <section id="tab-autoposter" class="tab card p-4 hidden">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-semibold">Auto-Poster</h2>
+          <div class="flex items-center gap-2">
+            <button class="btn btn-ghost" id="btnUpload">Upload</button>
+            <button class="btn btn-primary">Schedule All</button>
+          </div>
+        </div>
+        <div class="mt-4 grid md:grid-cols-2 gap-4">
+          <!-- queue item -->
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="flex items-center justify-between">
+              <div class="font-medium">“Midnight Drive” Hook Test</div>
+              <span class="chip">Queued</span>
+            </div>
+            <div class="kpi mt-1">Caption v2 • Hashtag pack A • Optimal: Thu 3:30 PM</div>
+            <div class="mt-3 flex items-center gap-2">
+              <label class="chip"><input type="checkbox" class="mr-1" checked> TikTok</label>
+              <label class="chip"><input type="checkbox" class="mr-1" checked> IG</label>
+              <label class="chip"><input type="checkbox" class="mr-1"> Shorts</label>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <button class="btn btn-ghost text-xs">Preview</button>
+              <button class="btn btn-ghost text-xs">Edit</button>
+              <button class="btn btn-primary text-xs">Schedule</button>
+            </div>
+          </div>
+
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="flex items-center justify-between">
+              <div class="font-medium">Before/After Mix Teaser</div>
+              <span class="chip">Needs caption</span>
+            </div>
+            <div class="kpi mt-1">Suggested: Sat 11:30 AM</div>
+            <div class="mt-3 flex items-center gap-2">
+              <label class="chip"><input type="checkbox" class="mr-1" checked> TikTok</label>
+              <label class="chip"><input type="checkbox" class="mr-1"> IG</label>
+              <label class="chip"><input type="checkbox" class="mr-1" checked> Shorts</label>
+            </div>
+            <div class="mt-3 flex items-center gap-2">
+              <button class="btn btn-ghost text-xs">Generate Caption</button>
+              <button class="btn btn-primary text-xs">Schedule</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS TAB -->
+      <section id="tab-analytics" class="tab card p-4 hidden">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-semibold">Analytics</h2>
+          <div class="flex items-center gap-2">
+            <select class="bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm">
+              <option>Last 7 days</option>
+              <option>Last 28 days</option>
+              <option>Last 90 days</option>
+            </select>
+            <button class="btn btn-ghost">Export PDF</button>
+          </div>
+        </div>
+
+        <!-- KPI row -->
+        <div class="grid md:grid-cols-4 gap-3 mt-4">
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="kpi">Views</div>
+            <div class="text-2xl font-semibold">482,341</div>
+            <div class="text-xs text-emerald-400 mt-1">+43% WoW</div>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="kpi">Followers</div>
+            <div class="text-2xl font-semibold">31,204</div>
+            <div class="text-xs text-emerald-400 mt-1">+1,204</div>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="kpi">Avg Watch %</div>
+            <div class="text-2xl font-semibold">38%</div>
+            <div class="text-xs text-emerald-400 mt-1">+6pts</div>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="kpi">Posts</div>
+            <div class="text-2xl font-semibold">12</div>
+            <div class="text-xs text-white/60 mt-1">3 A/B tests</div>
+          </div>
+        </div>
+
+        <!-- charts -->
+        <div class="grid lg:grid-cols-2 gap-4 mt-4">
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-medium mb-3">Views & Followers</div>
+            <canvas id="lineChart" height="120"></canvas>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-medium mb-3">Platform Breakdown</div>
+            <canvas id="barChart" height="120"></canvas>
+          </div>
+        </div>
+
+        <!-- top content -->
+        <div class="mt-4 rounded-xl bg-white/5 border border-white/10 p-4 overflow-auto">
+          <div class="text-sm font-medium mb-2">Top Content</div>
+          <table class="w-full text-sm min-w-[600px]">
+            <thead class="text-white/60">
+              <tr class="text-left">
+                <th class="py-2">Post</th><th>Platform</th><th>Views</th><th>Watch%</th><th>Saves</th><th>Posted</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/10">
+              <tr>
+                <td class="py-2">Hook test — “Midnight Drive”</td><td>TikTok</td><td>128k</td><td>42%</td><td>1,204</td><td>Tue</td>
+              </tr>
+              <tr>
+                <td class="py-2">Before/After mix teaser</td><td>Shorts</td><td>92k</td><td>39%</td><td>684</td><td>Thu</td>
+              </tr>
+              <tr>
+                <td class="py-2">Studio reveal duet</td><td>IG Reels</td><td>76k</td><td>41%</td><td>512</td><td>Sat</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- INSIGHTS TAB -->
+      <section id="tab-insights" class="tab card p-4 hidden">
+        <h2 class="text-2xl font-semibold">Your Label Team (AI)</h2>
+        <div class="grid lg:grid-cols-3 gap-4 mt-4">
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-semibold">AI Manager</div>
+            <p class="kpi mt-2">Post Tue/Thu at 3:30 PM. Move the “Before/After” to Saturday AM. Consider collaboration with @NovaMiles (similar audience).</p>
+            <button class="btn btn-primary text-xs mt-3">Apply These Changes</button>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-semibold">AI A&R</div>
+            <p class="kpi mt-2">Your last hook has a strong 4-bar motif. Try a 7-second intro to line up with “punch-in” trend windows.</p>
+            <button class="btn btn-ghost text-xs mt-3">Open Hook Notes</button>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-semibold">Content Coach</div>
+            <p class="kpi mt-2">Behind-the-scenes clips drive 2× comments. Add a lyric overlay and ask for duet verses to compound.</p>
+            <button class="btn btn-ghost text-xs mt-3">View Examples</button>
+          </div>
+        </div>
+        <div class="mt-4 rounded-xl bg-white/5 border border-white/10 p-4">
+          <div class="flex items-center justify-between">
+            <div class="text-sm font-semibold">Weekly Report</div>
+            <button class="btn btn-primary text-xs">Generate PDF</button>
+          </div>
+          <p class="kpi mt-2">Summary of wins, misses, and next steps. Auto-emailed to you every Monday.</p>
+        </div>
+      </section>
+
+      <!-- LIBRARY TAB -->
+      <section id="tab-library" class="tab card p-4 hidden">
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-semibold">Library</h2>
+          <div class="flex items-center gap-2">
+            <button class="btn btn-ghost" id="btnUpload2">Upload File</button>
+            <button class="btn btn-primary">New Folder</button>
+          </div>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4 mt-4">
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-semibold">Hook Booth Clip.mp4</div>
+            <div class="kpi mt-1">Video • 23MB</div>
+            <div class="mt-3 flex items-center gap-2">
+              <button class="btn btn-ghost text-xs">Preview</button>
+              <button class="btn btn-primary text-xs">Use in Post</button>
+            </div>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-semibold">Hashtag Pack — UndergroundRap A</div>
+            <div class="kpi mt-1">Text • 1.2KB</div>
+            <div class="mt-3 flex items-center gap-2">
+              <button class="btn btn-ghost text-xs">Copy</button>
+              <button class="btn btn-primary text-xs">Apply</button>
+            </div>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-semibold">Caption Generator</div>
+            <div class="kpi mt-1">Prompt your caption & CTA</div>
+            <div class="mt-2 flex gap-2">
+              <input id="capInput" class="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm" placeholder="e.g., studio booth tease, duet CTA">
+              <button id="btnGenCap" class="btn btn-primary text-xs">Generate</button>
+            </div>
+            <pre id="capOut" class="mt-3 text-xs text-white/80 whitespace-pre-wrap"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS TAB -->
+      <section id="tab-settings" class="tab card p-4 hidden">
+        <h2 class="text-2xl font-semibold">Settings</h2>
+        <div class="grid md:grid-cols-2 gap-4 mt-4">
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-semibold mb-2">Accounts</div>
+            <label class="flex items-center justify-between py-2 border-b border-white/10">
+              <span>TikTok</span>
+              <button class="btn btn-ghost text-xs">Connect</button>
+            </label>
+            <label class="flex items-center justify-between py-2 border-b border-white/10">
+              <span>Instagram</span>
+              <button class="btn btn-ghost text-xs">Connect</button>
+            </label>
+            <label class="flex items-center justify-between py-2">
+              <span>YouTube</span>
+              <button class="btn btn-ghost text-xs">Connect</button>
+            </label>
+          </div>
+          <div class="rounded-xl bg-white/5 border border-white/10 p-4">
+            <div class="text-sm font-semibold mb-2">Preferences</div>
+            <label class="flex items-center justify-between py-2 border-b border-white/10">
+              <span>Daily post target</span>
+              <select class="bg-white/5 border border-white/10 rounded-xl px-3 py-1 text-sm">
+                <option>1</option><option selected>2</option><option>3</option>
+              </select>
+            </label>
+            <label class="flex items-center justify-between py-2">
+              <span>Timezone</span>
+              <select class="bg-white/5 border border-white/10 rounded-xl px-3 py-1 text-sm">
+                <option selected>America/Los_Angeles</option>
+                <option>America/New_York</option>
+                <option>Europe/London</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Edit Slot Modal -->
+  <div id="slotModal" class="modal fixed inset-0 z-50 items-center justify-center bg-black/60 p-4">
+    <div class="card p-5 max-w-lg w-full">
+      <div class="flex items-center justify-between">
+        <div class="text-lg font-semibold">Edit Post Slot</div>
+        <button class="btn btn-ghost" onclick="closeSlotModal()">✕</button>
+      </div>
+      <div class="grid gap-3 mt-3">
+        <label class="text-sm">Platform
+          <select id="mPlatform" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 mt-1">
+            <option>TikTok</option><option>Instagram</option><option>YouTube Shorts</option>
+          </select>
+        </label>
+        <label class="text-sm">Time
+          <input id="mTime" type="time" value="15:30" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 mt-1">
+        </label>
+        <label class="text-sm">Caption
+          <textarea id="mCaption" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 mt-1">Hook test with trending sound “Midnight Drive”. CTA: Duet this with your verse.</textarea>
+        </label>
+        <label class="text-sm">Hashtags
+          <input id="mTags" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 mt-1" value="#undergroundrap #hookchallenge #fyp">
+        </label>
+      </div>
+      <div class="flex items-center justify-end gap-2 mt-4">
+        <button class="btn btn-ghost" onclick="closeSlotModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSlot()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 card px-4 py-2 text-sm">Saved ✅</div>
+
+  <script>
+    // --- Tab logic
+    const tabs = ['schedule','trends','autoposter','analytics','insights','library','settings'];
+    const tablinks = document.querySelectorAll('.tablink');
+    const openTab = (name) => {
+      tabs.forEach(t => document.getElementById('tab-'+t).classList.add('hidden'));
+      document.getElementById('tab-'+name).classList.remove('hidden');
+      tablinks.forEach(b => b.classList.remove('bg-white/10'));
+      document.querySelector(`.tablink[data-tab="${name}"]`).classList.add('bg-white/10');
+      window.scrollTo({top:0, behavior:'smooth'});
+    };
+    tablinks.forEach(b => b.addEventListener('click', () => openTab(b.dataset.tab)));
+    openTab('schedule');
+
+    // --- Schedule demo data
+    const slots = [
+      { col:1, platform:'TikTok', time:'15:30', tags:'#undergroundrap', caption:'Hook test with trending sound “Midnight Drive”. CTA: Duet this with your verse.' },
+      { col:3, platform:'IG', time:'16:00', tags:'#hookchallenge', caption:'Studio reveal with chorus overlay 0:14.' },
+      { col:4, platform:'Shorts', time:'11:30', tags:'#fyp', caption:'Before/After mix teaser. Punch after 7s.' },
+    ];
+    function renderSlots(){
+      for(let i=0;i<7;i++){ document.getElementById('col'+i).innerHTML=''; }
+      const tpl = document.getElementById('slotTpl').content;
+      slots.forEach((s,idx)=>{
+        const node = tpl.cloneNode(true);
+        node.querySelector('.platform').textContent = `${s.platform} • ${s.time}`;
+        node.querySelector('.chip').textContent = s.tags || '#trend';
+        node.querySelector('.line-clamp-2').textContent = s.caption;
+        node.querySelector('.editSlot').addEventListener('click', ()=> openSlotModal(idx));
+        document.getElementById('col'+s.col).appendChild(node);
+      });
+    }
+    renderSlots();
+
+    // --- Modal
+    const slotModal = document.getElementById('slotModal');
+    let editingIndex = 0;
+    function openSlotModal(idx){
+      editingIndex = idx;
+      const s = slots[idx];
+      document.getElementById('mPlatform').value = s.platform;
+      document.getElementById('mTime').value = s.time;
+      document.getElementById('mCaption').value = s.caption;
+      document.getElementById('mTags').value = s.tags;
+      slotModal.classList.add('open');
+    }
+    function closeSlotModal(){ slotModal.classList.remove('open'); }
+    function saveSlot(){
+      const s = slots[editingIndex];
+      s.platform = document.getElementById('mPlatform').value;
+      s.time = document.getElementById('mTime').value;
+      s.caption = document.getElementById('mCaption').value;
+      s.tags = document.getElementById('mTags').value;
+      renderSlots(); closeSlotModal(); showToast('Saved slot ✅');
+    }
+
+    // --- Add slot / Publish week
+    document.getElementById('btnAddSlot').addEventListener('click', ()=>{
+      slots.push({ col: Math.floor(Math.random()*7), platform:'TikTok', time:'15:00', tags:'#newsound', caption:'New slot from quick add.' });
+      renderSlots(); showToast('Added slot ➕');
+    });
+    document.getElementById('btnPublishAll').addEventListener('click', ()=> showToast('Queued week for publishing 🚀'));
+    document.getElementById('btnGenerateWeek').addEventListener('click', ()=> showToast('Generated week from trends ⚡'));
+
+    // --- Library caption generator (demo only)
+    document.getElementById('btnGenCap')?.addEventListener('click', ()=>{
+      const q = document.getElementById('capInput').value || 'studio booth tease, duet CTA';
+      const out = `Caption: ${q} — what do you think?\nCTA: Drop a duet with your hardest 8 🔥\nHashtags: #undergroundrap #hookchallenge #fyp`;
+      document.getElementById('capOut').textContent = out;
+    });
+
+    // --- Toast helper
+    function showToast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(()=> t.classList.remove('show'), 1800);
+    }
+
+    // --- Charts
+    const lineCtx = document.getElementById('lineChart');
+    if (lineCtx){
+      new Chart(lineCtx, {
+        type:'line',
+        data:{ labels:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+          datasets:[
+            { label:'Views', data:[52,80,61,90,74,112,85], borderColor:'#f59e0b', tension:.35 },
+            { label:'Followers +', data:[8,12,10,15,11,19,16], borderColor:'#ef4444', tension:.35 }
+          ]
+        },
+        options:{ plugins:{ legend:{ labels:{ color:'#ddd' } } }, scales:{ x:{ ticks:{ color:'#aaa' }}, y:{ ticks:{ color:'#aaa' }}} }
+      });
+    }
+    const barCtx = document.getElementById('barChart');
+    if (barCtx){
+      new Chart(barCtx, {
+        type:'bar',
+        data:{ labels:['TikTok','IG Reels','Shorts'],
+          datasets:[{ label:'Views', data:[310,120,51], backgroundColor:['#ef4444','#f59e0b','#a855f7'] }]
+        },
+        options:{ plugins:{ legend:{ labels:{ color:'#ddd' } } }, scales:{ x:{ ticks:{ color:'#aaa' }}, y:{ ticks:{ color:'#aaa' }}} }
+      });
+    }
+
+    // --- Connect / Upload (demo)
+    document.getElementById('btnConnect').addEventListener('click', ()=> showToast('Open connect modal…'));
+    document.getElementById('btnUpload')?.addEventListener('click', ()=> showToast('Open uploader…'));
+    document.getElementById('btnUpload2')?.addEventListener('click', ()=> showToast('Open uploader…'));
+  </script>
+</body>
+</html>
